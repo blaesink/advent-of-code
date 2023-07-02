@@ -27,11 +27,11 @@ fn main() {
     match args.command {
         Commands::Run { year, day, part } => {
             let year = year.unwrap_or(DEFAULT_YEAR);
-            let day = day.saturating_sub(1);
+            let _day = day.saturating_sub(1);
 
             let s = solutions::get_year(year);
 
-            let solution = match s.get(day as usize) {
+            let solution = match s.get(_day as usize) {
                 Some(s) => s,
                 None => {
                     return println!("No solution for day {} {}", day, year);
