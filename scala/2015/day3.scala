@@ -28,3 +28,7 @@ case class House(
     visitedHouses = visitedHouses.updated((x,y), 1)
 
   println(visitedHouses.count(_._2 >= 1))
+
+/* The lazy way */
+@main def part2(): Unit =
+  val input = loadFile("../data/2015/03.txt").map(_.toChar).toArray // array of chars
