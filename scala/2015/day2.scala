@@ -2,6 +2,10 @@ package day2
 
 import inputs.loadFile
 
+object Input {
+  final val raw: String = loadFile("../data/2015/02.txt")
+}
+
 case class Present(
   l: Int,
   w: Int,
@@ -33,9 +37,7 @@ object Present {
 }
 
 @main def part1(): Unit =
-  val input = loadFile("../data/2015/02.txt")
-
-  val presents = input
+  val presents = Input.raw
     .lines
     .map(line => Present(line.split("x").map(_.toInt)))
     .map(_.wrapping_paper_area)
@@ -43,10 +45,8 @@ object Present {
     println(presents.reduce(_+_).get)
 
 @main def part2(): Unit =
-  val input = loadFile("../data/2015/02.txt")
-
   println(
-    input
+    Input.raw
       .lines
       .map(line => Present(line.split("x").map(_.toInt)))
       .map(_.ribbon_length)

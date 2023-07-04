@@ -2,12 +2,15 @@ package day1
 import inputs.loadFile
 import scala.util.control.Breaks._
 
-@main def part1()  =
-  val input = loadFile("../data/2015/01.txt")
 
+object Input {
+  final val raw: String = loadFile("../data/2015/01.txt")
+}
+
+@main def part1()  =
   var floor = 0
 
-  input.foreach(char => {
+  Input.raw.foreach(char => {
     char match
       case '(' => 
         floor += 1
@@ -20,13 +23,11 @@ import scala.util.control.Breaks._
   println(floor)
 
 @main def part2(): Unit =
-  val input = loadFile("../data/2015/01.txt")
-  
   var i = 0
   var floor = 0
 
   breakable{
-    for char <- input do
+    for char <- Input.raw do
       char match
         case '(' => 
           floor += 1
