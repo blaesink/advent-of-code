@@ -17,7 +17,7 @@ fn compile_day(
     });
 
     const install_cmd = b.addInstallArtifact(exe, .{});
-    const install_step = b.step(name, "Build day");
+    const install_step = b.step(b.fmt("build_{s}", .{name}), "Build day");
     install_step.dependOn(&install_cmd.step);
 
     const run_cmd = b.addRunArtifact(exe);
@@ -26,7 +26,7 @@ fn compile_day(
         run_cmd.addArgs(args);
     }
 
-    const run_step = b.step(b.fmt("run_{s}", .{name}), "Run specified day");
+    const run_step = b.step(b.fmt("{s}", .{name}), "Run specified day");
     run_step.dependOn(&run_cmd.step);
 }
 
@@ -35,7 +35,7 @@ pub fn build(b: *std.build.Builder) void {
     const optimize = b.standardOptimizeOption(.{});
 
     comptime var counter: usize = 1;
-    inline while (counter < 4) {
+    inline while (counter < 5) {
         compile_day(b, target, optimize, counter);
         counter += 1;
     }
