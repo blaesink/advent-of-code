@@ -2,7 +2,7 @@ const std = @import("std");
 const input: []const u8 = "bgvyzdsv";
 const md5 = std.crypto.hash.Md5;
 
-fn part1(allocator: std.mem.Allocator, contents: []const u8) !usize {
+fn solution(allocator: std.mem.Allocator, contents: []const u8, comptime haystack: []const u8) !usize {
     var i: usize = 0;
 
     while (true) {
@@ -18,7 +18,7 @@ fn part1(allocator: std.mem.Allocator, contents: []const u8) !usize {
 
         const err = try std.fmt.bufPrint(&hashed_string, "{s}", .{std.fmt.fmtSliceHexLower(&hash_buf)});
 
-        if (std.mem.startsWith(u8, err, "00000")) {
+        if (std.mem.startsWith(u8, err, haystack)) {
             break;
         }
 
@@ -33,12 +33,13 @@ pub fn main() !void {
 
     const allocator = arena.allocator();
 
-    std.debug.print("Part 1: {d}\n", .{try part1(allocator, input)});
+    std.debug.print("Part 1: {d}\n", .{try solution(allocator, input, "00000")});
+    std.debug.print("Part 2: {d}\n", .{try solution(allocator, input, "000000")});
 }
 
 test "part 1" {
     const allocator = std.testing.allocator;
     const key = "abcdef";
 
-    try std.testing.expectEqual(try part1(allocator, key), 609043);
+    try std.testing.expectEqual(try solution(allocator, key, 5), 609043);
 }
