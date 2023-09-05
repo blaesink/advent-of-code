@@ -1,6 +1,7 @@
 const std = @import("std");
 const utils = @import("utils.zig");
 
+///Return the count of vowels in string.
 fn countVowels(input: []const u8) u8 {
     var i: u8 = 0;
     for (input) |char| {
@@ -24,6 +25,7 @@ fn hasIllegalCharacterSequence(input: []const u8) bool {
     return false;
 }
 
+///Checks if string has a repeating character like "aa", "bb"...
 fn hasDuplicateCharacter(input: []const u8) bool {
     var previous_letter = input[0];
 
@@ -36,6 +38,7 @@ fn hasDuplicateCharacter(input: []const u8) bool {
     return false;
 }
 
+///@Part one solution
 fn isNice(input: []const u8) bool {
     if ((countVowels(input) >= 3) and
         hasDuplicateCharacter(input) and
@@ -59,12 +62,64 @@ fn partOne(input: []const u8) usize {
     return num_nice;
 }
 
+fn containsNonOverlappingPair(input: []const u8) !bool {
+    var last_char: u8 = input[0];
+    var current_pair: [2]u8 = undefined;
+
+    for (input[1..]) |char| {
+        const buf = try std.fmt.bufPrint(&current_pair, "{c}{c}", .{ last_char, char });
+
+        if (std.mem.containsAtLeast(u8, input, 2, buf)) {
+            return true;
+        }
+        last_char = char;
+    }
+    return false;
+}
+
+///Returns true if a sequence like `efe` or `aba` exists.
+///Even `aaa` is accepted.
+fn containsOreoSequence(input: []const u8) bool {
+    var first_char: u8 = input[0];
+    var second_char: u8 = input[1];
+
+    for (input[2..]) |char| {
+        if (char == first_char) {
+            return true;
+        }
+        first_char = second_char;
+        second_char = char;
+    }
+    return false;
+}
+
+fn isNice2(input: []const u8) !bool {
+    if (try containsNonOverlappingPair(input) and containsOreoSequence(input)) {
+        return true;
+    }
+    return false;
+}
+
+fn partTwo(input: []const u8) !usize {
+    var num_nice: usize = 0;
+
+    var lines = std.mem.splitScalar(u8, input, '\n');
+
+    while (lines.next()) |line| {
+        if (try isNice2(line)) {
+            num_nice += 1;
+        }
+    }
+    return num_nice;
+}
+
 pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const allocator = arena.allocator();
     const input = try utils.getInput(2015, 5, allocator);
 
     std.debug.print("{d}\n", .{partOne(input)});
+    std.debug.print("{d}\n", .{try partTwo(input)});
 }
 
 test "count vowels aaa" {
@@ -104,4 +159,36 @@ test "isNice ugknbfddgicrmopn" {
 
 test "isNaughty jchzalrnumimnmhp" {
     try std.testing.expect(!isNice("jchzalrnumimnmhp"));
+}
+
+test "containsNonOverlappingPair xyxy" {
+    try std.testing.expect(try containsNonOverlappingPair("xyxy"));
+}
+
+test "containsNonOverlappingPair aabcdefgaa" {
+    try std.testing.expect(try containsNonOverlappingPair("aabcdefgaa"));
+}
+
+test "not containsNonOverlappingPair aaa" {
+    try std.testing.expect(!try containsNonOverlappingPair("aaa"));
+}
+
+test "containsOreoSequence efe" {
+    try std.testing.expect(containsOreoSequence("efe"));
+}
+
+test "containsOreoSequence abcdefeghi" {
+    try std.testing.expect(containsOreoSequence("abcdefeghi"));
+}
+
+test "containsOreoSequence aaa" {
+    try std.testing.expect(containsOreoSequence("aaa"));
+}
+
+test "isNice2 qjhvhtzxzqqjkmpb" {
+    try std.testing.expect(try isNice2("qjhvhtzxzqqjkmpb"));
+}
+
+test "not isNice2 uurcxstgmygtbstg" {
+    try std.testing.expect(!try isNice2("uurcxstgmygtbstg"));
 }
