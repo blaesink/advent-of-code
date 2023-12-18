@@ -18,3 +18,5 @@ Cargo.lock
 .bloop
 .bsp
 .scala*/
+.direnv
+.devenv
