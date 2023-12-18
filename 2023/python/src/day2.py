@@ -1,3 +1,5 @@
+from functools import reduce
+from collections import defaultdict
 import typer
 
 RED_LIMIT = 12
@@ -40,11 +42,44 @@ def part_one(lines: list[str]) -> int:
     return sum
 
 
+def part_two(lines: list[str]):
+    pow_sum = 0
+    for line in lines:
+        # r,g,b
+        colors = [0, 0, 0]
+
+        outcome = format_line(line)
+
+        # Get the maximum of each color.
+        # Done by grouping each one and then using max()
+
+        groups = defaultdict(list)
+
+        for o in outcome:
+            for k, v in o.items():
+                groups[k].append(v)
+
+        for group, vals in groups.items():
+            max_val = max(vals)
+
+            if group == "red" and max_val > colors[0]:
+                colors[0] = max_val
+            elif group == "green" and max_val > colors[1]:
+                colors[1] = max_val
+            elif group == "blue" and max_val > colors[2]:
+                colors[2] = max_val
+
+        pow_sum += reduce(lambda x, y: x * y, colors)
+
+    return pow_sum
+
+
 def main(data_path: str) -> None:
     with open(data_path, "r") as f:
         data = [line.strip() for line in f.readlines()]
 
     print("Part one:", part_one(data))
+    print("Part two:", part_two(data))
 
 
 if __name__ == "__main__":
