@@ -45,29 +45,22 @@ def part_one(lines: list[str]) -> int:
 def part_two(lines: list[str]):
     pow_sum = 0
     for line in lines:
-        # r,g,b
+        # r,b,g because we're going to abuse some sorting here
         colors = [0, 0, 0]
-
+        groups = defaultdict(list)
         outcome = format_line(line)
 
         # Get the maximum of each color.
         # Done by grouping each one and then using max()
 
-        groups = defaultdict(list)
-
         for o in outcome:
             for k, v in o.items():
                 groups[k].append(v)
 
-        for group, vals in groups.items():
-            max_val = max(vals)
+        for i, group in enumerate(sorted(groups, key=lambda x: len(x[0]))):
+            max_val = max(groups[group])
 
-            if group == "red" and max_val > colors[0]:
-                colors[0] = max_val
-            elif group == "green" and max_val > colors[1]:
-                colors[1] = max_val
-            elif group == "blue" and max_val > colors[2]:
-                colors[2] = max_val
+            colors[i] = max(colors[i], max_val)
 
         pow_sum += reduce(lambda x, y: x * y, colors)
 
@@ -91,12 +84,17 @@ class Test:
     def test_parsing():
         input = [
             "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
-            "Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue",
         ]
 
         actual = list(map(format_line, input))
 
-        expected = [(5, 4, 9), (1, 6, 6)]
+        expected = [
+            [
+                {"blue": 3, "red": 4},
+                {"red": 1, "blue": 6, "green": 2},
+                {"green": 2},
+            ]
+        ]
 
         assert actual == expected
 
