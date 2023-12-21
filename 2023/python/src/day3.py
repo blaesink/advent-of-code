@@ -1,69 +1,60 @@
-def has_adjacent_symbols(
-    line: str, above: str, below: str, start: int, end: int
-) -> bool:
-    """Return whether this span of characters has surrounding valid symbols.
+import math
+import re
 
-    Valid symbols are any non alphanumeric character that is not <`.`>
-    """
+import typer
 
-    def _is_valid_symbol(char: str) -> bool:
-        if not char.isalnum() and char != ".":
-            return True
-        return False
 
-    # Directly left or right of the span.
-    if _is_valid_symbol(line[start - 1]) or _is_valid_symbol(line[end + 1]):
-        return True
+def generate_char_map(lines: list[str]) -> dict:
+    line_length = len(lines[0])
 
-    # Directly above or below anything in the span.
-    # Add -1 to the start and +1 to the end to check for the corners.
-    if any(_is_valid_symbol(c) for c in above[start - 1 : end + 1]) or any(
-        _is_valid_symbol(c) for c in below[start - 1 : end + 1]
-    ):
-        return True
+    chars = {
+        (row, col): []
+        for row in range(line_length)
+        for col in range(line_length)
+        if lines[row][col] not in "01234566789."
+    }
 
-    return False
+    for row_idx, row in enumerate(lines):
+        for digit in re.finditer(r"\d+", row):
+            edge = {
+                (row, col)
+                for row in (row_idx - 1, row_idx, row_idx + 1)
+                for col in range(digit.start() - 1, digit.end() + 1)
+            }
+
+            for o in edge & chars.keys():
+                chars[o].append(int(digit.group()))
+
+    return chars
 
 
 def part_one(lines: list[str]) -> int:
-    result: int = 0
+    char_map = generate_char_map(lines)
 
-    for row_idx, line in enumerate(lines):
-        # Skip rows with nothing
-        if not any(x.isdigit() for x in line):
-            continue
+    return sum(sum(p) for p in char_map.values())
 
-        # start and end will be reset constantly as we generate "slices".
-        # Initially set to the first non symbol.
-        start = line.find(next(filter(str.isdigit, line)))
-        end: int = start
 
-        # We append to this string until we hit a non-numeric.
-        current_num_str: str = line[start]
+def part_two(lines: list[str]) -> int:
+    char_map = generate_char_map(lines)
 
-        # We already have the initial
-        for char in line[start + 1 :]:
-            if char.isdigit():
-                current_num_str += char
-                end += 1
-            else:
-                print(current_num_str)
-                if row_idx == 0:
-                    if has_adjacent_symbols(
-                        line, lines[row_idx - 1], lines[row_idx + 1], start, end
-                    ):
-                        result += int(current_num_str)
-                # skip to the next digit
-                start = line.find(next(filter(str.isdigit, line[end:])))
-                end = start
-                current_num_str = ""
+    return sum(math.prod(p) for p in char_map.values() if len(p) == 2)  # type: ignore
 
-    return result
+
+def main(data_path: str):
+    with open(data_path, "r") as f:
+        data = [line.strip() for line in f.readlines()]
+
+    print("Part one:", part_one(data))
+    print("Part two:", part_two(data))
+
+
+if __name__ == "__main__":
+    typer.run(main)
 
 
 class Test:
     @staticmethod
-    def test_input():
+    def test_part_one():
         input = """467..114..
             ...*......
             ..35..633.
