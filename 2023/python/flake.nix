@@ -29,6 +29,7 @@
               gitpython
               loguru
               pytest
+              pytest-watch
               ruff-lsp
               typer
             ];

@@ -20,3 +20,4 @@ Cargo.lock
 .scala*/
 .direnv
 .devenv
+**/__pycache__/
