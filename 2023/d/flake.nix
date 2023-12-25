@@ -32,6 +32,7 @@
                   # https://devenv.sh/reference/options/
                   packages = with pkgs; [
                     dmd
+                    dub
                     (pkgs.callPackage ./default.nix {})
                     (pkgs.callPackage ./dcd/default.nix {})
                   ];
