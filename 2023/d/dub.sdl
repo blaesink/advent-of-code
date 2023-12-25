@@ -1,0 +1,11 @@
+name "d"
+description "AOC in D"
+authors "Kevin Blaesing"
+copyright "Copyright © 2023, Kevin Blaesing"
+license "MIT"
+
+configuration "one" {
+	"mainSourceFile" "day1.d"
+    targetType "executable"
+    targetName "one"
+}
