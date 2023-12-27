@@ -21,3 +21,4 @@ Cargo.lock
 .direnv
 .devenv
 **/__pycache__/
+target/ # Where I put my dlang output files.

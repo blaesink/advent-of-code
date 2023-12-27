@@ -3,6 +3,7 @@ description "AOC in D"
 authors "Kevin Blaesing"
 copyright "Copyright © 2023, Kevin Blaesing"
 license "MIT"
+targetPath "target"
 
 configuration "one" {
 	"mainSourceFile" "day1.d"
