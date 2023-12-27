@@ -3,7 +3,7 @@ import std.ascii : isDigit;
 import std.array;
 import std.file;
 
-/// Returns all digits in a line.
+/// Returns all digits in a string.
 int[] getDigitsFromLine(string line) {
     int[] digits = [];
 
@@ -19,21 +19,18 @@ int[] getDigitsFromLine(string line) {
 int partOne(string[] lines) { 
     int sum = 0;
 
-    foreach(string line; lines) {
+    foreach(line; lines) {
         int[] digits = getDigitsFromLine(line);
 
         if (digits.length > 0) {
-            // Join together
             uint x = digits[0];
             uint y = digits[$-1];
             uint pow = 10;
             while (y >= pow) {
                 pow *= 10;
             }
-
             sum += x * pow + y;
         }
-        
     }
 
     return sum;
@@ -56,11 +53,21 @@ void main() {
     +/
 
     auto file = File("../data/day1.txt");
-    auto lines = appender!(string[]);
+    string[] lines;
 
-    foreach(line; file.byLine())
-        lines.put(cast(string)(line));
-    
+    foreach(line; file.byLine()) {
+        lines ~= line.idup();
+    }
 
-    writeln("Part one: ", partOne(lines.data));
+    writeln("Part one: ", partOne(lines));
+}
+
+unittest {
+    const int[] expected = [1,2,3];
+    assert(getDigitsFromLine("1abc2ee3") == expected);
+}
+
+unittest {
+    auto expected = [];
+    assert(getDigitsFromLine("qbrfftei") == expected);
 }
