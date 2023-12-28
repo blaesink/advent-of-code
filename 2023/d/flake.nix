@@ -36,6 +36,10 @@
                     (pkgs.callPackage ./default.nix {})
                     (pkgs.callPackage ./dcd/default.nix {})
                   ];
+
+                  scripts = {
+                    run.exec = "${pkgs.dub}/bin/dub run $*";
+                  };
                 }
               ];
             };

@@ -3,10 +3,16 @@ description "AOC in D"
 authors "Kevin Blaesing"
 copyright "Copyright © 2023, Kevin Blaesing"
 license "MIT"
-targetPath "target"
 
-configuration "one" {
-	"mainSourceFile" "day1.d"
-    targetType "executable"
-    targetName "one"
+subPackage {
+  name "one"
+  targetType "executable"
+  sourcePaths "source/day1"
+  targetPath "target"
+}
+subPackage {
+  name "two"
+  targetType "executable"
+  sourcePaths "source/day2"
+  targetPath "target"
 }

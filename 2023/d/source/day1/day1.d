@@ -16,7 +16,7 @@ int[] getDigitsFromLine(string line) {
     return digits;
 }
 
-int partOne(string[] lines) { 
+int partOne(const string[] lines) { 
     int sum = 0;
 
     foreach(line; lines) {
