@@ -20,7 +20,7 @@ def main(day: int) -> None:
         print("Invalid day!")
         exit(1)
 
-    data_path = os.path.join(repo_root, "data", "2023", f"day{day}.txt")
+    data_path = os.path.join(repo_root, "2023", "data", f"day{day}.txt")
 
     if not (os.path.exists(data_path)):
         print("Missing data!")
