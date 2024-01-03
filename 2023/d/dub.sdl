@@ -4,6 +4,7 @@ authors "Kevin Blaesing"
 copyright "Copyright © 2023, Kevin Blaesing"
 license "MIT"
 
+
 subPackage {
   name "one"
   targetType "executable"
@@ -15,4 +16,11 @@ subPackage {
   targetType "executable"
   sourcePaths "source/day2"
   targetPath "target"
+}
+subPackage {
+  name "six"
+  targetType "executable"
+  sourcePaths "source/day6"
+  targetPath "target"
+  dependency "unit-threaded" version="~>2.1.7"
 }
